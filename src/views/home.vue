@@ -3,17 +3,12 @@
     <a-button type="primary" @click="onOpen">
       Open Drawer
     </a-button>
-    <a-drawer
-    title="Basic Drawer"
-    placement="right"
-    :closable="false"
-    v-model:visible="visible1"
-    :after-visible-change="afterVisibleChange"
-  >
-    <p>Some contents...</p>
-    <p>Some contents...</p>
-    <p>Some contents...</p>
-  </a-drawer>
+    <a-drawer title="Basic Drawer" placement="right" :closable="false" v-model:visible="visible1"
+      :after-visible-change="afterVisibleChange">
+      <p>Some contents...</p>
+      <p>Some contents...</p>
+      <p>Some contents...</p>
+    </a-drawer>
     <a-modal v-model:visible="visible" title="Basic Modal" @ok="handleOk">
       <p>Some contents...</p>
       <p>Some contents...</p>
@@ -77,6 +72,9 @@
           <a-button style="margin-left: 10px;" type="danger" @click="showModal">
             Open Dialog
           </a-button>
+          <a-button style="margin-left: 10px;" type="danger" @click="changeCount">
+            changeCount
+          </a-button>
         </a-form-item>
       </a-form>
 
@@ -85,9 +83,11 @@
 </template>
 <script>
 import { reactive, toRefs, ref } from 'vue'
+import { useStore } from 'vuex'
 export default {
   setup () {
     const ruleForm = ref(null)
+    const store = useStore()
     const state = reactive({
       visible1: false,
       visible: false,
@@ -124,6 +124,7 @@ export default {
         desc: [{ required: true, message: 'Please input activity form', trigger: 'blur' }],
       },
     })
+
     const onSubmit = () => {
       const ruleFormRef = ruleForm.value
       ruleFormRef.validate()
@@ -151,7 +152,11 @@ export default {
     const afterVisibleChange = (val) => {
       console.log('visible', val);
     }
-    return { ...toRefs(state), onSubmit, resetForm, ruleForm, showModal, handleOk,onOpen,afterVisibleChange }
+    // vuex change
+    const changeCount = () => {
+      store.commit('SET_COUNT')
+    }
+    return { ...toRefs(state), onSubmit, resetForm, ruleForm, showModal, handleOk, onOpen,changeCount, afterVisibleChange }
   }
 };
 </script>
